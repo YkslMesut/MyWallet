@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_nav_graph.xml"
+    app:startDestination="@id/walletFragment">
+
+    <fragment
+        android:id="@+id/walletFragment"
+        android:name="com.myu.myumywallet.ui.wallet.WalletFragment"
+        android:label="WalletFragment" />
+    <fragment
+        android:id="@+id/salePointFragment"
+        android:name="com.myu.myumywallet.ui.salepoint.SalePointFragment"
+        android:label="fragment_sale_point"
+        tools:layout="@layout/fragment_sale_point" />
+</navigation>
