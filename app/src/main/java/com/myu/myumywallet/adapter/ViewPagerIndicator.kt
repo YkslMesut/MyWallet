@@ -10,7 +10,7 @@ import com.myu.myumywallet.R
 class ViewPagerIndicator(
     private val imageViewPagerAdapter: ImageViewPagerAdapter,
     private val mContext : Context,
-    private val sliderDotsPanel : LinearLayout) {
+    private var sliderDotsPanel : LinearLayout) {
 
    private val dotsCount : Int
        get()  = imageViewPagerAdapter.itemCount
@@ -18,8 +18,8 @@ class ViewPagerIndicator(
     lateinit var dots : ArrayList<ImageView>
 
     fun loadDots(currentPageIndex : Int) : LinearLayout{
-        dots = arrayListOf<ImageView>()
-
+        dots = ArrayList()
+        sliderDotsPanel.removeAllViews()
         for (dot in 0  until dotsCount) {
             dots.add(dot, ImageView(mContext))
             dots[dot].setImageDrawable(ContextCompat.getDrawable(mContext, R.drawable.ic_default_dots))

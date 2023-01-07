@@ -5,13 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
-import com.myu.myumywallet.R
 import com.myu.myumywallet.adapter.ImageViewPagerAdapter
 import com.myu.myumywallet.adapter.ViewPagerIndicator
 import com.myu.myumywallet.data.model.WalletDataItem
@@ -29,6 +26,7 @@ class WalletFragment : Fragment() {
     private lateinit var imageViewPagerAdapter: ImageViewPagerAdapter
     private lateinit var viewPagerIndicator: ViewPagerIndicator
     private lateinit var sliderDotsPanel: LinearLayout
+    private var lastPosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +57,10 @@ class WalletFragment : Fragment() {
         sliderDotsPanel = binding.SliderDots
         observeWalletData()
         viewModel.getWalletData()
+
+        binding.refresh.setOnClickListener {
+            viewModel.getWalletData()
+        }
     }
 
     private fun observeWalletData() {
@@ -79,29 +81,27 @@ class WalletFragment : Fragment() {
         }
     }
 
-
-
     private fun loadData(dataList : List<WalletDataItem>) {
-        val currentPageIndex = 0
 
         imageViewPagerAdapter = ImageViewPagerAdapter(dataList)
         binding.viewPager.adapter = imageViewPagerAdapter
 
         viewPagerIndicator = ViewPagerIndicator(imageViewPagerAdapter,mContext,sliderDotsPanel)
-        sliderDotsPanel = viewPagerIndicator.loadDots(currentPageIndex)
+        sliderDotsPanel = viewPagerIndicator.loadDots(lastPosition)
 
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-        binding.viewPager.currentItem = currentPageIndex
-        binding.cardData = dataList[currentPageIndex]
+        binding.viewPager.currentItem = lastPosition
+        binding.cardData = dataList[lastPosition]
 
         binding.viewPager.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
 
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
+                    lastPosition = position
                     binding.cardData = dataList[position]
-                    sliderDotsPanel = viewPagerIndicator.slideDots(position)
+                    sliderDotsPanel = viewPagerIndicator.slideDots(lastPosition)
                 }
             }
         )
