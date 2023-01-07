@@ -2,21 +2,23 @@ package com.myu.myumywallet.ui.wallet
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.viewpager2.widget.ViewPager2
 import com.myu.myumywallet.R
 import com.myu.myumywallet.adapter.ImageViewPagerAdapter
+import com.myu.myumywallet.adapter.ViewPagerIndicator
 import com.myu.myumywallet.data.model.WalletDataItem
 import com.myu.myumywallet.databinding.FragmentWalletBinding
 import com.myu.myumywallet.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class WalletFragment : Fragment() {
@@ -25,6 +27,8 @@ class WalletFragment : Fragment() {
     private lateinit var mContext : Context
     private val viewModel : WalletViewModel by viewModels()
     private lateinit var imageViewPagerAdapter: ImageViewPagerAdapter
+    private lateinit var viewPagerIndicator: ViewPagerIndicator
+    private lateinit var sliderDotsPanel: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +48,7 @@ class WalletFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentWalletBinding.inflate(inflater,container,false)
         return binding.root
@@ -52,46 +56,54 @@ class WalletFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sliderDotsPanel = binding.SliderDots
         observeWalletData()
         viewModel.getWalletData()
     }
 
     private fun observeWalletData() {
-        viewModel.walletResponse.observe(viewLifecycleOwner, Observer { result ->
-            when(result.status) {
+        viewModel.walletResponse.observe(viewLifecycleOwner) { result ->
+            when (result.status) {
                 Status.LOADING -> {
 
                 }
                 Status.SUCCESS -> {
-                    result.data?.let { data -> setUpViewPager(data) }
+                    result.data?.let { data ->
+                        loadData(data)
+                    }
                 }
                 else -> {
 
                 }
             }
-        })
+        }
     }
 
-    private fun setUpViewPager(dataList : List<WalletDataItem>) {
-        imageViewPagerAdapter = ImageViewPagerAdapter(dataList)
 
+
+    private fun loadData(dataList : List<WalletDataItem>) {
+        val currentPageIndex = 0
+
+        imageViewPagerAdapter = ImageViewPagerAdapter(dataList)
         binding.viewPager.adapter = imageViewPagerAdapter
+
+        viewPagerIndicator = ViewPagerIndicator(imageViewPagerAdapter,mContext,sliderDotsPanel)
+        sliderDotsPanel = viewPagerIndicator.loadDots(currentPageIndex)
 
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-        val currentPageIndex = 0
         binding.viewPager.currentItem = currentPageIndex
-        //changeIndicator(currentPageIndex)
+        binding.cardData = dataList[currentPageIndex]
 
         binding.viewPager.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
 
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
-                    //changeIndicator(position)
+                    binding.cardData = dataList[position]
+                    sliderDotsPanel = viewPagerIndicator.slideDots(position)
                 }
             }
         )
     }
-
 }

@@ -20,7 +20,7 @@ fun loadImage(view: ImageView, url: String?) {
 
 @BindingAdapter("loadCvv")
 fun loadCvvNumber(view : TextView , cvvNumber: String?) {
-    cvvNumber?.let {  cvvNumber ->
-        view.text = cvvNumber.takeLast(4)
+    cvvNumber?.let {  cv ->
+        view.text = cv.takeLast(4)
     }
 }
