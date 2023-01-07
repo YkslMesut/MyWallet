@@ -1,11 +1,12 @@
 package com.myu.myumywallet.utils
 
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.myu.myumywallet.R
 import com.squareup.picasso.Picasso
 
-@BindingAdapter("load")
+@BindingAdapter("loadImage")
 fun loadImage(view: ImageView, url: String?) {
 
     url?.let {
@@ -14,5 +15,12 @@ fun loadImage(view: ImageView, url: String?) {
             .fit()
             .placeholder(R.drawable.ic_baseline_refresh_24)
             .into(view)
+    }
+}
+
+@BindingAdapter("loadCvv")
+fun loadCvvNumber(view : TextView , cvvNumber: String?) {
+    cvvNumber?.let {  cvvNumber ->
+        view.text = cvvNumber.takeLast(4)
     }
 }

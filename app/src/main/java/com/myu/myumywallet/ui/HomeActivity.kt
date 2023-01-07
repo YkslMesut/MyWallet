@@ -28,6 +28,7 @@ class HomeActivity : AppCompatActivity() {
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.homeFragmentContainerView) as NavHostFragment
         navController = navHostFragment.navController
+
         binding.btnWallet.setOnClickListener {
             navController.navigateUp()
             navController.navigate(R.id.walletFragment)

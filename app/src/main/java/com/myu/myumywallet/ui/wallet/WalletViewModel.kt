@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.myu.myumywallet.data.model.WalletData
 import com.myu.myumywallet.data.repository.WalletRepository
+import com.myu.myumywallet.utils.Result
+import com.myu.myumywallet.utils.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,6 +21,7 @@ class WalletViewModel @Inject constructor(
     get() = _walletResponse
 
     fun getWalletData() = viewModelScope.launch {
+        _walletResponse.value = Result(Status.LOADING,null,null)
         _walletResponse.value = repository.getWalletsData()
     }
 }

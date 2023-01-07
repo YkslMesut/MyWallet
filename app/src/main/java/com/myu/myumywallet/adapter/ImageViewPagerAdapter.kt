@@ -15,14 +15,7 @@ class ImageViewPagerAdapter(private val walletResultList: List<WalletDataItem>) 
         RecyclerView.ViewHolder(binding.root) {
 
         fun setData(wallet: WalletDataItem) {
-            binding.cardNumber.text = wallet.number.takeLast(4)
-            binding.cvvNumber.text = wallet.cvv
-
-            Picasso.get()
-                .load(wallet.image)
-                .fit()
-                .placeholder(R.drawable.ic_baseline_refresh_24)
-                .into(binding.cardImage)
+         binding.cardData = wallet
         }
     }
 
