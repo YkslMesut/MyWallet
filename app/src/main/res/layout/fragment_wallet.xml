@@ -5,6 +5,9 @@
         <variable
             name="cardData"
             type="com.myu.myumywallet.data.model.WalletDataItem" />
+        <variable
+            name="lastRefresh"
+            type="String" />
     </data>
     <ScrollView xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/root_layout"
@@ -38,7 +41,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
+                android:layout_marginTop="30dp"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="300dp">
@@ -53,7 +66,7 @@
                     android:layout_height="wrap_content">
                     <TextView
                         android:id="@+id/lastRefreshTime"
-                        android:text="0 Seconds Ago"
+                        app:loadLastRefreshTime="@{lastRefresh}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                     <ImageButton
@@ -69,6 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
+                        android:textSize="20sp"
                         android:text="@{cardData.component1().component1()  + cardData.component1().component2()}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
@@ -85,7 +99,7 @@
                     <TextView
                         android:layout_marginEnd="20dp"
                         android:layout_alignParentEnd="true"
-                        android:text="@{cardData.component5().component1()  + cardData.component5().component2()}"
+                        app:loadCurrency="@{cardData.component5().component2()}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </RelativeLayout>
