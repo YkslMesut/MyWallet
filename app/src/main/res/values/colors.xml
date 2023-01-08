@@ -8,6 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="app_green">#5EB184</color>
     <color name="green">#2F7E58</color>
+    <color name="grey">#D3CACA</color>
     <color name="white">#FFFFFFFF</color>
     <color name="picked_white">#E8F8EB</color>
     <color name="unpicked_white">#8DC3A6</color>

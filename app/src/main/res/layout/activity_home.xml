@@ -41,20 +41,20 @@
             android:id="@+id/btnSalePoint"
             android:gravity="center"
             android:clickable="true"
-            android:layout_marginEnd="20dp"
+            android:layout_marginEnd="@dimen/margin_20"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:focusable="true">
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="@dimen/icon_width_height"
+                android:layout_height="@dimen/icon_width_height"
                 android:src="@drawable/ic_baseline_storefront_24"/>
             <TextView
-                android:text="SALE POINTS"
-                android:layout_marginStart="10dp"
+                android:text="@string/sale_points"
+                android:layout_marginStart="@dimen/margin_10"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="@dimen/medium_text_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

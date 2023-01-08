@@ -8,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -21,6 +22,8 @@ import com.myu.myumywallet.databinding.FragmentWalletBinding
 import com.myu.myumywallet.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -95,9 +98,11 @@ class WalletFragment : Fragment() {
                     showUi()
                     result.data?.let { data ->
                         myWalletList = data
+                        if (!refreshTimer.isActive) {
+                            refreshTimer.start()
+                        }
                         loadData()
                     }
-                    trackRefresh().start()
                 }
                 else -> {
                     showUi()
@@ -106,10 +111,14 @@ class WalletFragment : Fragment() {
         }
 
     }
-    private fun trackRefresh() : Job =lifecycleScope.launch {
+      private val refreshTimer =lifecycleScope.launch {
+
         repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.refreshTimer.collect{
-                val different = Calendar.getInstance().time.time -(myWalletList.get(lastPosition).fetchTime?.time ?: 0)
+            viewModel.refreshTimer.catch {
+                    exception -> Toast.makeText(mContext,exception.message,Toast.LENGTH_LONG).show()
+            }.cancellable().collect{
+                val different =
+                    Calendar.getInstance().time.time - (myWalletList[lastPosition].fetchTime?.time ?: 0)
                 val diffInSec: Long = TimeUnit.MILLISECONDS.toSeconds(different)
 
                 binding.lastRefresh = diffInSec.toString()
@@ -118,12 +127,20 @@ class WalletFragment : Fragment() {
 
     }
 
+    private fun stopTrackRefresh () {
+        refreshTimer.cancel()
+    }
+
     private fun loadData() {
 
         imageViewPagerAdapter = ImageViewPagerAdapter(myWalletList)
         binding.viewPager.adapter = imageViewPagerAdapter
 
-        viewPagerIndicator = ViewPagerIndicator(imageViewPagerAdapter,mContext,sliderDotsPanel)
+        viewPagerIndicator = ViewPagerIndicator(
+            imageViewPagerAdapter,
+            mContext,
+            sliderDotsPanel)
+
         sliderDotsPanel = viewPagerIndicator.loadDots(lastPosition)
 
         binding.viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL

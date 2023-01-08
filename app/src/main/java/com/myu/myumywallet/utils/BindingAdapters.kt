@@ -1,5 +1,6 @@
 package com.myu.myumywallet.utils
 
+import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -37,13 +38,21 @@ fun loadLastRefreshTime(view : TextView , lastRefreshTime: String?) {
 
 @BindingAdapter("loadCurrency")
 fun loadCurrency(view : TextView , currency: String?) {
-    val currentCountry =  Locale.getDefault().country
-    val currentLanguage = Locale.getDefault().language
-    val currencyFormat = NumberFormat.
-    getCurrencyInstance(Locale
-        (currentLanguage,
-        currentCountry))
-    
-    view.text = currencyFormat.format(currency?.toDouble() ?: 0)
+    view.text = calculateCurrency(currency)
+}
+
+fun calculateCurrency(currency: String?) : String {
+    val dots = "."
+   val  result  =    currency?.let { currencyResponse ->
+        val penny = dots + currencyResponse.takeLast(2)
+        val money = currencyResponse.dropLast(2)
+
+        val dec = DecimalFormat("###,###")
+        val formattedNumber = dec.format(money.toDouble())
+
+
+         formattedNumber + penny
+    } ?:""
+    return result
 }
 
